@@ -8,7 +8,6 @@ tabix -p vcf 1000genomes_chr6.vcf.gz
 
 input=1000genomes_chr6.vcf.gz
 vep -i $input \
-        --buffer_size 1000000000 \
         --offline \
         --everything \
         --cache --cache_version 115 \
