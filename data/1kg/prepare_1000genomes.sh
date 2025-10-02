@@ -15,4 +15,4 @@ vep -i $input \
         --assembly GRCh38 \
         --force \
         --json \
-        --dir_cache /nfs/production/flicek/ensembl/variation/data/VEP/tabixconverted
+        --dir_cache /path/to/cache 
