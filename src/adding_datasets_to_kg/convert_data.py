@@ -33,7 +33,7 @@ def convert_civic_data():
 
 def convert_cbioportal_data():
     print("Converting cbioportal data to KGX files...")
-    cbioportal_data_path = get_data_directory_path() / "cbioportal" / "chr6-gene-doid.json"
+    cbioportal_data_path = get_data_directory_path() / "cbioportal" / "all-chr-gene-doid-info.json"
     with (open(cbioportal_data_path, "r") as cbioportal_data_file,
           get_kgx_output_file_writer("cbioportal") as kgx_file_writer):
         cbioportal_data = json.load(cbioportal_data_file)
@@ -55,7 +55,7 @@ def convert_cbioportal_data():
             kgx_file_writer.write_edge(subject_id=gene_id,
                                        predicate="biolink:gene_associated_with_condition",
                                        object_id=disease_id,
-                                       primary_knowledge_source="infores:tcga")
+                                       primary_knowledge_source="infores:cbioportal")
 
 def convert_all():
     output_dir = Path(__file__).parent.parent.parent / "data_output" / "kgs"
