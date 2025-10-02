@@ -14,7 +14,7 @@ def convert_civic_data():
     with (open(civic_data_path, "r") as civic_data_file,
           get_kgx_output_file_writer("civic") as kgx_file_writer):
         civic_reader = csv.DictReader(civic_data_file, delimiter="\t")
-        # headers: gene_symbol	variant	allele_registry_id	disease	doid	therapy
+        # headers: gene_symbol	variant	allele_registry_id	disease	doid	therapy	ncbi_gene_id	ncit_combo_id	ncit_token_ids	ncit_ids
         for row in civic_reader:
             # TODO need IDs instead of names for genes and therapies
             # TODO "unregistered" is getting assigned to allele_registry_id
@@ -22,14 +22,38 @@ def convert_civic_data():
             variant_name = row["variant"]
             disease_id = row["doid"]
             disease_name = row["disease"]
-            if not (variant_id and disease_id) or "CAID:" not in variant_id:
-                continue
-            kgx_file_writer.write_node(node_id=variant_id, node_name=variant_name, node_types=[SEQUENCE_VARIANT])
-            kgx_file_writer.write_node(node_id=disease_id, node_name=disease_name, node_types=[DISEASE])
-            kgx_file_writer.write_edge(subject_id=variant_id,
-                                       predicate="biolink:genetically_associated_with",
-                                       object_id=disease_id,
-                                       primary_knowledge_source="infores:civic")
+            gene_id = row["ncbi_gene_id"]
+            gene_symbol = row["gene_symbol"]
+            therapy_ids = row["ncit_ids"].split(",")
+            if variant_id and "unrecognized" not in variant_name:
+                kgx_file_writer.write_node(node_id=variant_id,
+                                           node_name=variant_name,
+                                           node_types=[SEQUENCE_VARIANT])
+            if disease_id:
+                kgx_file_writer.write_node(node_id=disease_id,
+                                           node_name=disease_name,
+                                           node_types=[DISEASE])
+            if variant_id and disease_id and "CAID:" in variant_id:
+                kgx_file_writer.write_edge(subject_id=variant_id,
+                                           predicate="biolink:genetically_associated_with",
+                                           object_id=disease_id,
+                                           primary_knowledge_source="infores:civic")
+            for therapy_id in therapy_ids:
+                if therapy_id and disease_id:
+                    therapy_id = f"NCIT:{therapy_id}"
+                    kgx_file_writer.write_node(node_id=therapy_id,
+                                               node_name="")
+                    kgx_file_writer.write_edge(subject_id=therapy_id,
+                                               predicate="biolink:applied_to_treat",
+                                               object_id=disease_id,
+                                               primary_knowledge_source="infores:civic")
+            if variant_id and gene_id:
+                kgx_file_writer.write_node(node_id=gene_id,
+                                           node_name=gene_symbol)
+                kgx_file_writer.write_edge(subject_id=variant_id,
+                                           predicate="biolink:is_sequence_variant_of",
+                                           object_id=gene_id,
+                                           primary_knowledge_source="infores:civic")
 
 def convert_cbioportal_data():
     print("Converting cbioportal data to KGX files...")
