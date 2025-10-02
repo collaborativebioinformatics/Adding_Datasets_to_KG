@@ -27,15 +27,17 @@ We built our knowledge graph by leveraging existing open tools including **Node 
 
 All entities were standardized with **Node Normalizer**, ensuring resolution to Biolink-compliant identifiers. Relationships were expressed in a consistent semantic framework using the **Biolink Model**. The resulting datasets were merged into an interoperable knowledge graph using **ORION** and exported in **OpenCypher format**.  
 
+Now that our modular knowledge graphs have been standardized into the same Biolink-compliant model, we can integrate them seamlessly with existing knowledge graphs such as ROBOKOP. Because they share the same schema, identifiers, and predicate structure, they can be merged with the  ~50 sources, ~10 million nodes, and ~200 million edges contained in ROBOKOP’s existing framework without the need for extensive re-mapping. In practice, this means that we have made new KGs that can be interoperable with a larger system, run more expansive queries across all sources at once, and more easily surface insights from the combined network.
+
 We also developed a pipeline to convert the KG into **Amazon Neptune–ready files**. Hosting in Neptune provides a scalable, high-performance environment for querying nodes, edges, and metadata. Using **openCypher** or **Gremlin**, researchers can efficiently explore biological relationships. By connecting Neptune to a **Model Context Protocol (MCP) agent**, the KG becomes directly usable within AI workflows, enabling schema inspection, query execution, and integration of structured biomedical evidence into reasoning pipelines.  
 
 ---
 
 ## Project Goals  
 
-- Build modular KGs from **CIViC**, **cBioPortal**, and **1000 Genomes**  
-- Normalize identifiers with **TOGO ID** and **Babel Node Normalizer**  
-- Apply the **Biolink Model** to standardize nodes and predicates  
+- Build modular KGs from **CIViC**, **cBioPortal**, **TCGA**, and **1000 Genomes**   
+- Normalize identifiers with **TOGO ID** or **Babel Node Normalizer**  
+- Apply the **Biolink Model** to standardize predicates  
 - Develop a semantic model for consistent integration of **variant-level data**  
 - Provide scalable workflows for adding new biomedical datasets  
 - Demonstrate Neptune + MCP integration for **AI-driven KG exploration**  
@@ -59,7 +61,8 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 |------------------|----------------------------------------------------|-------------------------------------------------------------------------------------|----------------------------------------------------------------------|
 | **CIViC**        | Variants (CAID), Diseases (DOID/MONDO), Genes, Drugs/Therapies | - `variant — biolink:genetically_associated_with — disease`  <br> - `drug — biolink:applied_to_treat — disease` | Curated variant–disease–therapy data; rich manual curation backbone |
 | **cBioPortal**   | Variants, Conditions                               | - `variant — biolink:genetically_associated_with — disease`                         | Adds additional variant–disease associations                        |
-| **1000 Genomes** | Variants (dbSNP), Genes, Populations               | - `variant — biolink:has_population_frequency — population`  <br> - `variant — biolink:located_in — gene` | Provides allele frequency and gene annotations for chromosome 6     |
+| **1000 Genomes** | Variants (dbSNP), Genes, Populations               | - `variant — biolink:is_non_coding_variant_of — gene`  <br> - `variant — biolink:is_missense_variant_of — gene` | Provides allele frequency and gene annotations for chromosome 6     |
+| **TCGA** | Variants, Genes, Diseases               | TBD! | In development     |
 
 ---
 
