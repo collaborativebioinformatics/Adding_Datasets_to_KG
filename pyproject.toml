@@ -13,7 +13,8 @@ dependencies = [
     "strands-agents",
     "jupyter",
     "jupyterlab",
-    "ipykernel"
+    "ipykernel",
+    "awscurl"
 ]
 
 [build-system]
