@@ -7,7 +7,13 @@ requires-python = ">=3.12"
 dependencies = [
     "robokop-orion>=0.1.3",
     "pandas",
-    "numpy"
+    "numpy",
+    "boto3",
+    "mcp",
+    "strands-agents",
+    "jupyter",
+    "jupyterlab",
+    "ipykernel"
 ]
 
 [build-system]
