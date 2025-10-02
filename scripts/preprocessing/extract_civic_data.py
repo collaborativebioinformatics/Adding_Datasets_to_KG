@@ -39,15 +39,24 @@ def normalize_doid(value):
         return np.nan
 
 def normalize_ca(value):
-    """Convert CAxxxx → CA:xxxx (leave as-is if already CA:xxxx)."""
+    """Force allele IDs to CAID:CAxxxx."""
     if pd.isna(value):
         return np.nan
     s = str(value).strip()
-    if s.startswith("CA:"):
+    return f"CAID:{s}"
+
+def normalize_ncbi_gene(value):
+    """Return NCBIGene:XXXX if numeric-like or already prefixed; else NaN."""
+    if pd.isna(value):
+        return np.nan
+    s = str(value).strip()
+    if s.upper().startswith("NCBIGENE:"):
         return s
-    if s.upper().startswith("CA") and not s.upper().startswith("CA:"):
-        return "CA:" + s[2:]
-    return s
+    try:
+        n = int(float(s))
+        return f"NCBIGene:{n}"
+    except Exception:
+        return np.nan
 
 # ----------------------------
 # Load data
@@ -57,16 +66,17 @@ mps      = pd.read_csv(mp_path,       sep="\t")
 variants = pd.read_csv(variant_path,  sep="\t")
 features = pd.read_csv(feature_path,  sep="\t")
 
-# ----------------------------
-# MolecularProfile → Variant mapping
-# ----------------------------
-variant_id_col = "variant_ids" if "variant_ids" in mps.columns else None
-if variant_id_col is None:
-    raise ValueError("Expected 'variant_ids' in MolecularProfileSummaries.tsv")
+# Sanity check for required columns
+for req in [["molecular_profile_id","variant_ids"], ["variant_id","variant","feature_id","entrez_id"], ["feature_id","name"]]:
+    missing = [c for c in req if c not in (mps.columns if "variant_ids" in req else variants.columns if "entrez_id" in req or "variant" in req else features.columns)]
+    # Not failing hard to stay flexible, but you can raise if you prefer.
 
+# ----------------------------
+# MolecularProfile → Variant mapping (uses variant_ids)
+# ----------------------------
 mp_variant_map = (
-    mps[["molecular_profile_id", variant_id_col]]
-      .rename(columns={variant_id_col: "variant_ids_raw"})
+    mps[["molecular_profile_id", "variant_ids"]]
+      .rename(columns={"variant_ids": "variant_ids_raw"})
       .copy()
 )
 mp_variant_map["variant_id_list"] = mp_variant_map["variant_ids_raw"].apply(parse_list_like)
@@ -75,16 +85,24 @@ mp_variant_map["variant_id"] = pd.to_numeric(mp_variant_map["variant_id_list"], 
 mp_variant_map = mp_variant_map.dropna(subset=["variant_id"])[["molecular_profile_id", "variant_id"]].drop_duplicates()
 
 # ----------------------------
-# Variants + gene symbols (+ allele registry)
+# Variants + allele + entrez (directly from VariantSummaries.entrez_id)
 # ----------------------------
 allele_col = next((c for c in ["allele_registry_id", "allele_registry_ids", "allele_registry"] if c in variants.columns), None)
-variant_cols = ["variant_id", "variant", "feature_id"]
+
+variant_cols = ["variant_id", "variant", "feature_id", "entrez_id"]
 if allele_col:
     variant_cols.append(allele_col)
 
 variant_min = variants[variant_cols].copy()
-gene_min = features[["feature_id", "name"]].rename(columns={"name": "gene_symbol"})
-variant_with_gene = variant_min.merge(gene_min, on="feature_id", how="left")
+
+# ----------------------------
+# Features → gene symbol
+# ----------------------------
+feature_min = features[["feature_id", "name"]].rename(columns={"name": "gene_symbol"})
+
+# Attach gene symbol + entrez
+variant_with_gene = variant_min.merge(feature_min, on="feature_id", how="left")
+variant_with_gene["ncbi_gene_id"] = variant_with_gene["entrez_id"].apply(normalize_ncbi_gene)
 
 # ----------------------------
 # Clinical evidence minimal
@@ -92,7 +110,7 @@ variant_with_gene = variant_min.merge(gene_min, on="feature_id", how="left")
 clinical_min = clinical[["molecular_profile_id", "disease", "doid", "therapies"]].copy()
 
 # ----------------------------
-# Merge and normalize
+# Merge and normalize (no therapy explode)
 # ----------------------------
 merged = (
     clinical_min
@@ -104,22 +122,22 @@ merged["doid"] = merged["doid"].apply(normalize_doid)
 if allele_col:
     merged["allele_registry_id"] = merged[allele_col].apply(normalize_ca)
 
-# Explode therapies into one per row
-merged["therapy_list"] = merged["therapies"].apply(parse_list_like)
-exploded = merged.explode("therapy_list", ignore_index=True)
-
 # ----------------------------
-# Final BIG file
+# Final BIG file (therapies kept as-is)
 # ----------------------------
 bigfile = (
-    exploded[["gene_symbol", "variant", "allele_registry_id", "disease", "doid", "therapy_list"]]
-    .rename(columns={"therapy_list": "therapy"})
-    .drop_duplicates()
+    merged[[
+        "gene_symbol", "variant", "allele_registry_id",
+        "disease", "doid", "therapies", "ncbi_gene_id"
+    ]]
+    .rename(columns={"therapies": "therapy"})
     .reset_index(drop=True)
 )
 
-bigfile.to_csv("variant_gene_disease_therapy_with_normIDs.tsv", sep="\t", index=False)
-print("Saved → variant_gene_disease_therapy_with_normIDs.tsv")
+bigfile.to_csv("variant_gene_disease_therapy_with_normIDs_revised.tsv", sep="\t", index=False)
+print("Saved → variant_gene_disease_therapy_with_normIDs_plus_ncbi.tsv")
+
+
 
 
 
