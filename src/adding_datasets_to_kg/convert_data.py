@@ -57,8 +57,10 @@ def convert_cbioportal_data():
                                        object_id=disease_id,
                                        primary_knowledge_source="infores:tcga")
 
-def convert_all():
+def convert_all(sources:list=None):
     output_dir = Path(__file__).parent.parent.parent / "data_output" / "kgs"
     output_dir.mkdir(parents=True, exist_ok=True)
-    convert_civic_data()
-    convert_cbioportal_data()
+    if sources and "civic" in sources:
+        convert_civic_data()
+    if sources and "cbioportal" in sources:
+        convert_cbioportal_data()
