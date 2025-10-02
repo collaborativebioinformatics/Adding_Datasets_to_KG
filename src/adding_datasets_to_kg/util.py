@@ -41,3 +41,16 @@ def format_hgvsg(hgvsg, spdi):
         spdi_contig = spdi.split(":")[0]
         hgvsg_contig = hgvsg.split(":")[1:]
         return f"HGVS:{spdi_contig}:{':'.join(hgvsg_contig)}"
+    
+def get_consequence_predicate(so_term):
+    so_term_to_predicate = {
+        "splice_region_variant": "biolink:splice_site_variant_of",
+        "splice_polymiridine_variant": "biolink:is_splice_site_variant_of",
+        "frameshift_variant": "biolink:is_frameshift_variant_of",
+        "missense_variant": "biolink:is_missense_variant_of",
+        "protein_altering_variant": "biolink:protein_altering_variant",
+        "synonymous_variant": "biolink:is_synonymous_variant_of",
+        "intron_variant": "biolink:is_non_coding_variant_of"
+    }
+
+    return so_term_to_predicate.get(so_term, "biolink:is_molecular_consequence_of")
