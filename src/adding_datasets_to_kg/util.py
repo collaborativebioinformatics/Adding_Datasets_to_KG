@@ -6,7 +6,7 @@ def get_source_list():
     return [
         "civic",
         "cbioportal",
-        # "1000genomes",
+        "1kg"
         # "tcga"
     ]
 
