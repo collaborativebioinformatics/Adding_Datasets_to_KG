@@ -11,7 +11,7 @@ One of the major challenges in building interoperable KGs is the heterogeneity o
 
 This project explores the construction of **modular knowledge graphs** from resources such as **cBioPortal** and **CIViC**, with the goal of understanding what data must be collected, normalized, and harmonized for interoperability. By adopting shared identifier spaces and community-driven data models, these modular KGs can be integrated into larger frameworks. Tools such as **TOGO ID** and the **NCATS Translator Babel Node Normalizer** help unify identifiers, while the **Biolink Model** provides a standardized schema to normalize both nodes and predicates across graphs.  
 
-The long-term aim is to establish a well-defined **somatic model** that not only ensures interoperability across current resources but also provides scalable pathways for integrating future datasets — enhancing the reusability and impact of biomedical knowledge graphs.  
+The long-term aim is to establish a well-defined **semantic data model** that not only ensures interoperability across current resources but also provides scalable pathways for integrating future datasets — enhancing the reusability and impact of biomedical knowledge graphs.  
 
 ---
 
@@ -20,7 +20,7 @@ The long-term aim is to establish a well-defined **somatic model** that not only
 - Build modular KGs from **cBioPortal** and **CIViC** data sources  
 - Normalize identifiers using tools like **TOGO ID** and **Babel Node Normalizer**  
 - Apply the **Biolink Model** to standardize nodes and predicates  
-- Develop a **somatic model** for consistent integration of variant-level data  
+- Develop a **semantic model** for consistent integration of variant-level data  
 - Provide scalable workflows for integrating additional biomedical datasets  
 
 ---
