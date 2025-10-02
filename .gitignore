@@ -1,0 +1,27 @@
+# Our files
+data_output/
+
+# Python-generated files
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+wheels/
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env/
+
+# uv specific
+uv.lock
+
+# Editor/OS specific files
+.DS_Store
+.vscode/
+*.swp
+*~
