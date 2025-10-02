@@ -39,13 +39,11 @@ def normalize_doid(value):
         return np.nan
 
 def normalize_ca(value):
-    """Force allele IDs to CA:CAxxxx."""
+    """Force allele IDs to CAID:CAxxxx."""
     if pd.isna(value):
         return np.nan
     s = str(value).strip()
-    if s.startswith("CA:"):
-        s = s[3:]  # strip existing CA: then re-add to standardize
-    return f"CA:{s}" if not s.startswith("CA") else f"CA:{s}"
+    return f"CAID:{s}"
 
 def normalize_ncbi_gene(value):
     """Return NCBIGene:XXXX if numeric-like or already prefixed; else NaN."""
