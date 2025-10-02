@@ -89,9 +89,13 @@ def convert_1kg_data() -> None:
                                            object_id=most_severe_consequence,
                                            primary_knowledge_source="infores:1000genomes")
 
-def convert_all():
+def convert_all(sources:list=None):
     output_dir = Path(__file__).parent.parent.parent / "data_output" / "kgs"
     output_dir.mkdir(parents=True, exist_ok=True)
-    convert_civic_data()
-    convert_cbioportal_data()
-    convert_1kg_data()
+    if sources:
+        if "1kg" in sources:
+            convert_1kg_data()
+        if "civic" in sources:
+            convert_civic_data()
+        if "cbioportal" in sources:
+            convert_cbioportal_data()

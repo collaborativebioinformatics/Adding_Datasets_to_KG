@@ -1,0 +1,245 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Neptune Serverless Database with S3 bucket for data loading'
+
+Parameters:
+  ClusterName:
+    Type: String
+    Default: midas-dev
+    Description: Name for the Neptune cluster
+    AllowedPattern: '[a-z][a-z0-9-]*'
+    ConstraintDescription: Must start with a letter and contain only lowercase letters, numbers, and hyphens
+
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for Neptune cluster
+
+  SubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: List of subnet IDs (at least 2 in different AZs)
+
+  SecurityGroupIds:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Description: Security group IDs for Neptune cluster
+
+  MinCapacity:
+    Type: Number
+    Default: 1.0
+    Description: Minimum NCUs for serverless scaling
+    MinValue: 1.0
+    MaxValue: 128.0
+
+  MaxCapacity:
+    Type: Number
+    Default: 128.0
+    Description: Maximum NCUs for serverless scaling
+    MinValue: 1.0
+    MaxValue: 128.0
+
+  EngineVersion:
+    Type: String
+    Default: 1.4.6.1
+    Description: Neptune engine version
+    AllowedValues:
+      - 1.4.6.1
+      - 1.4.0.0
+      - 1.3.2.1
+
+  BackupRetentionDays:
+    Type: Number
+    Default: 1
+    Description: Number of days to retain backups
+    MinValue: 1
+    MaxValue: 35
+
+  CreateS3Bucket:
+    Type: String
+    Default: 'true'
+    Description: Create S3 bucket for data loading
+    AllowedValues:
+      - 'true'
+      - 'false'
+
+Conditions:
+  ShouldCreateBucket: !Equals [!Ref CreateS3Bucket, 'true']
+
+Resources:
+  # S3 Bucket for Neptune data loading
+  NeptuneDataBucket:
+    Type: AWS::S3::Bucket
+    Condition: ShouldCreateBucket
+    Properties:
+      BucketName: !Sub 'neptune-${ClusterName}-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: Purpose
+          Value: NeptuneDataLoading
+        - Key: Cluster
+          Value: !Ref ClusterName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # IAM Role for Neptune to access S3
+  NeptuneS3Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'NeptuneS3LoadRole-${ClusterName}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: rds.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+      Tags:
+        - Key: Cluster
+          Value: !Ref ClusterName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Custom policy for specific S3 bucket access
+  NeptuneS3BucketPolicy:
+    Type: AWS::IAM::Policy
+    Condition: ShouldCreateBucket
+    Properties:
+      PolicyName: S3BucketAccess
+      Roles:
+        - !Ref NeptuneS3Role
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:ListBucket
+            Resource:
+              - !GetAtt NeptuneDataBucket.Arn
+              - !Sub '${NeptuneDataBucket.Arn}/*'
+
+  # DB Subnet Group
+  NeptuneSubnetGroup:
+    Type: AWS::Neptune::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: !Sub '${ClusterName}-subnet-group'
+      DBSubnetGroupDescription: !Sub 'Subnet group for ${ClusterName}'
+      SubnetIds: !Ref SubnetIds
+      Tags:
+        - Key: Name
+          Value: !Sub '${ClusterName}-subnet-group'
+        - Key: Cluster
+          Value: !Ref ClusterName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Neptune Cluster Parameter Group
+  NeptuneClusterParameterGroup:
+    Type: AWS::Neptune::DBClusterParameterGroup
+    Properties:
+      Family: neptune1.4
+      Description: !Sub 'Parameter group for ${ClusterName}'
+      Parameters:
+        neptune_enable_audit_log: '0'
+      Tags:
+        - Key: Name
+          Value: !Sub '${ClusterName}-params'
+        - Key: Cluster
+          Value: !Ref ClusterName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Neptune DB Cluster (Serverless)
+  NeptuneCluster:
+    Type: AWS::Neptune::DBCluster
+    Properties:
+      DBClusterIdentifier: !Ref ClusterName
+      EngineVersion: !Ref EngineVersion
+      DBClusterParameterGroupName: !Ref NeptuneClusterParameterGroup
+      DBSubnetGroupName: !Ref NeptuneSubnetGroup
+      VpcSecurityGroupIds: !Ref SecurityGroupIds
+      BackupRetentionPeriod: !Ref BackupRetentionDays
+      PreferredBackupWindow: '05:50-06:20'
+      PreferredMaintenanceWindow: 'mon:06:23-mon:06:53'
+      StorageEncrypted: true
+      ServerlessScalingConfiguration:
+        MinCapacity: !Ref MinCapacity
+        MaxCapacity: !Ref MaxCapacity
+      AssociatedRoles:
+        - RoleArn: !GetAtt NeptuneS3Role.Arn
+      Tags:
+        - Key: Name
+          Value: !Ref ClusterName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Neptune DB Instance (Serverless)
+  NeptuneInstance:
+    Type: AWS::Neptune::DBInstance
+    Properties:
+      DBInstanceIdentifier: !Sub '${ClusterName}-instance-1'
+      DBInstanceClass: db.serverless
+      DBClusterIdentifier: !Ref NeptuneCluster
+      Tags:
+        - Key: Name
+          Value: !Sub '${ClusterName}-instance-1'
+        - Key: Cluster
+          Value: !Ref ClusterName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+Outputs:
+  ClusterEndpoint:
+    Description: Neptune cluster writer endpoint
+    Value: !GetAtt NeptuneCluster.Endpoint
+    Export:
+      Name: !Sub '${AWS::StackName}-ClusterEndpoint'
+
+  ClusterReadEndpoint:
+    Description: Neptune cluster reader endpoint
+    Value: !GetAtt NeptuneCluster.ReadEndpoint
+    Export:
+      Name: !Sub '${AWS::StackName}-ClusterReadEndpoint'
+
+  ClusterPort:
+    Description: Neptune cluster port
+    Value: !GetAtt NeptuneCluster.Port
+    Export:
+      Name: !Sub '${AWS::StackName}-ClusterPort'
+
+  ClusterResourceId:
+    Description: Neptune cluster resource ID
+    Value: !GetAtt NeptuneCluster.ClusterResourceId
+    Export:
+      Name: !Sub '${AWS::StackName}-ClusterResourceId'
+
+  S3BucketName:
+    Condition: ShouldCreateBucket
+    Description: S3 bucket for Neptune data loading
+    Value: !Ref NeptuneDataBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-S3Bucket'
+
+  S3BucketUrl:
+    Condition: ShouldCreateBucket
+    Description: S3 bucket console URL
+    Value: !Sub 'https://s3.console.aws.amazon.com/s3/buckets/${NeptuneDataBucket}'
+
+  IAMRoleArn:
+    Description: IAM role ARN for Neptune S3 access
+    Value: !GetAtt NeptuneS3Role.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-IAMRoleArn'
+
+  ConnectionString:
+    Description: Sample connection string
+    Value: !Sub 'wss://${NeptuneCluster.Endpoint}:${NeptuneCluster.Port}/gremlin'
+
+  OpenCypherEndpoint:
+    Description: OpenCypher query endpoint
+    Value: !Sub 'https://${NeptuneCluster.Endpoint}:${NeptuneCluster.Port}/openCypher'
+
