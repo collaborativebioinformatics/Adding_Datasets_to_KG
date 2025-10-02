@@ -47,3 +47,28 @@ This script fetches and saves all available studies from cBioPortal API to `all_
 ##### Mutation Data
 - `{molecular_profile_id}_{sample_list_id}.json`: Mutation data files in the mutations subdirectory
 - `truncated/{molecular_profile_id}_{sample_list_id}.json`: Mutation data files that are potentially truncated and need manual review
+
+### Fetching cancer types
+
+#### Usage
+
+```bash
+./download_cancer_types.sh
+```
+
+This bash script downloads detailed study metadata from the cBioPortal API for cancer studies. It processes a list of study IDs from the previously downloaded dataset and retrieves comprehensive information about each study, including cancer type details. The script is designed to work as a follow-up to the cBioPortal mutation data downloader.
+
+#### API Endpoint Used
+
+- **Study Details**: `https://www.cbioportal.org/api/studies/{studyId}`
+
+#### Output Files
+
+Each study produces a JSON file containing detailed metadata:
+- **Filename**: `{study_id}.json`
+- **Content**: Complete study information including:
+  - Study description and citation
+  - Cancer type and subtype information
+  - Sample counts and demographics
+  - Publication details
+  - Data availability status
