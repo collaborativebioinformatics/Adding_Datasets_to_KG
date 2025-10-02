@@ -7,7 +7,7 @@ from adding_datasets_to_kg.util import get_kg_output_directory_path, get_source_
 
 def run_pipeline():
     sources = get_source_list()
-    convert_all()
+    convert_all(sources)
     normalize_all(sources)
     merge_all(sources)
 
