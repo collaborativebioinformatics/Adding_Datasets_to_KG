@@ -2,7 +2,7 @@
     "relevant_paths": {
         "downloads": "/path/to/downloads",
         "generated_datasets": "/path/to/generated/datasets",
-        "mapping": "path/to/adding_datasets_to_kg/scripts/cbioportal/mapping"
+        "logs": "/path/to/logs"
     },
     "resource_init": {
         "cbioportal": ["subfolder1", "subfolder2"]
