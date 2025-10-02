@@ -72,3 +72,25 @@ Each study produces a JSON file containing detailed metadata:
   - Sample counts and demographics
   - Publication details
   - Data availability status
+
+## Step 2: Process
+
+### Gene Extraction
+
+This Python script extracts gene information from multiple JSON mutation files and maps them to human gene symbols and disease ontology IDs (DOID). It produces a structured JSON file containing gene ID, gene symbol, chromosome, and DOID.
+
+Handles missing or unmapped study IDs gracefully and logs them.
+
+The script uses the MyGene.info API to map Entrez Gene IDs to gene symbols.
+
+#### Usage
+```python
+python extract_gene_info.py
+```
+
+### Study ID-to-DOID map
+```bash
+adding_datasets_to_kg/scripts/cbioportal/mapping/study_id_to_doid_map.json
+```
+
+This is the mapping file used by the gene extraction script. It is a dictionary `study_id` → `DOID`. Some study IDs on cBioPortal correspond to mixed cancer studies, pancancer atlases, multiple cancer types - those study IDs are not mapped to any DOID and get an `NA` value instead.
