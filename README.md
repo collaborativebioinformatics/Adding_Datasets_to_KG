@@ -1,37 +1,83 @@
-# Adding_Datasets_to_KG
+# Model Integration and Data Assembly System (MIDAS) 
 Implement a system to combine existing knowledge graphs (e.g. DisGeNet) with primary datasets (e.g. TCGA, 1000 genomes) 
 
-# Modular Biomedical Knowledge Graphs
 
 ## Introduction  
+Knowledge graphs (KGs) provide a powerful framework for organizing complex biomedical information by representing entities (such as genes, diseases, and therapies) and their relationships in a structured graph format. They enable discovery of hidden associations, support advanced querying, and serve as a foundation for integrating heterogeneous biomedical datasets.  
 
-Knowledge graphs (KGs) are powerful frameworks for organizing complex biomedical information by representing entities (such as genes, diseases, and therapies) and their relationships in a structured graph format. They enable the discovery of hidden associations, support advanced querying, and provide a foundation for integrating heterogeneous biomedical datasets.  
+One of the major challenges in building interoperable KGs is the heterogeneity of biomedical data. Different resources often rely on distinct formats, identifiers, and ontologies, making it difficult to connect multiple KGs and fully leverage their combined potential.  
 
-One of the major challenges in building interoperable KGs is the heterogeneity of biomedical data. Different resources often rely on distinct formats, identifiers, and ontologies depending on their use cases. This makes it difficult to connect multiple KGs together and fully leverage their combined potential.  
+This project demonstrates the construction of **modular biomedical knowledge graphs** from resources such as **CIViC, cBioPortal, and the 1000 Genomes Project**, with a focus on **chromosome 6 variants**. By adopting shared identifier spaces and community-driven data models, these modular KGs can be integrated into larger frameworks. Tools such as **ORION**, **Babel Node Normalizer**, and **TOGO ID** help unify identifiers, while the **Biolink Model** provides a standardized schema to normalize both nodes and predicates across graphs.  
 
-This project explores the construction of **modular knowledge graphs** from resources such as **cBioPortal** and **CIViC**, with the goal of understanding what data must be collected, normalized, and harmonized for interoperability. By adopting shared identifier spaces and community-driven data models, these modular KGs can be integrated into larger frameworks. Tools such as **TOGO ID** and the **NCATS Translator Babel Node Normalizer** help unify identifiers, while the **Biolink Model** provides a standardized schema to normalize both nodes and predicates across graphs.  
+The long-term aim is to establish a well-defined semantic data model that ensures interoperability across current resources and provides scalable pathways for integrating future datasets—enhancing the **reusability, accessibility, and impact** of biomedical knowledge graphs.  
 
-The long-term aim is to establish a well-defined **semantic data model** that not only ensures interoperability across current resources but also provides scalable pathways for integrating future datasets — enhancing the reusability and impact of biomedical knowledge graphs.  
+---
+
+## Methods  
+
+We built our knowledge graph by leveraging existing open tools including **Node Normalizer** for identifier harmonization, the **Biolink Model** for semantic alignment, and **ORION** for graph construction. To demonstrate feasibility, we collected and integrated data from **CIViC, cBioPortal, and the 1000 Genomes Project**, focusing on chromosome 6.  
+
+- **CIViC**: Ingested curated variant records linked to allele registry IDs, diseases (DOID), genes, and therapies. These support edge types such as:  
+  - `variant — biolink:genetically_associated_with — disease`  
+  - `drug — biolink:applied_to_treat — disease`  
+
+- **cBioPortal**: Added additional `genetically_associated_with` edges connecting variants to conditions.  
+
+- **1000 Genomes**: Provided population frequency and annotation data enriching variant nodes.  
+
+All entities were standardized with **Node Normalizer**, ensuring resolution to Biolink-compliant identifiers. Relationships were expressed in a consistent semantic framework using the **Biolink Model**. The resulting datasets were merged into an interoperable knowledge graph using **ORION** and exported in **OpenCypher format**.  
+
+We also developed a pipeline to convert the KG into **Amazon Neptune–ready files**. Hosting in Neptune provides a scalable, high-performance environment for querying nodes, edges, and metadata. Using **openCypher** or **Gremlin**, researchers can efficiently explore biological relationships. By connecting Neptune to a **Model Context Protocol (MCP) agent**, the KG becomes directly usable within AI workflows, enabling schema inspection, query execution, and integration of structured biomedical evidence into reasoning pipelines.  
 
 ---
 
 ## Project Goals  
 
-- Build modular KGs from **cBioPortal** and **CIViC** data sources  
-- Normalize identifiers using tools like **TOGO ID** and **Babel Node Normalizer**  
+- Build modular KGs from **CIViC**, **cBioPortal**, and **1000 Genomes**  
+- Normalize identifiers with **TOGO ID** and **Babel Node Normalizer**  
 - Apply the **Biolink Model** to standardize nodes and predicates  
-- Develop a **semantic model** for consistent integration of variant-level data  
-- Provide scalable workflows for integrating additional biomedical datasets  
+- Develop a semantic model for consistent integration of **variant-level data**  
+- Provide scalable workflows for adding new biomedical datasets  
+- Demonstrate Neptune + MCP integration for **AI-driven KG exploration**  
 
 ---
 
 ## Features (Planned / In Progress)  
 
-- ✅ Data ingestion pipelines for cBioPortal and CIViC  
+- ✅ Data ingestion pipelines for **CIViC** and **cBioPortal**  
+- ✅ Transformation pipeline for **Neptune upload**  
 - 🔄 Identifier normalization and mapping  
 - 🔄 Biolink Model alignment for entities and relationships  
-- ⏳ Example Cypher queries and graph exploration tools  
+- ⏳ Example **Cypher/Gremlin queries** and graph exploration tools  
 - ⏳ Documentation for extending to new data sources  
+
+---
+
+## Data Sources and Graph Structure  
+
+| Data Source      | Node Types Introduced                              | Edge Types Produced                                                                 | Notes                                                                 |
+|------------------|----------------------------------------------------|-------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| **CIViC**        | Variants (CAID), Diseases (DOID/MONDO), Genes, Drugs/Therapies | - `variant — biolink:genetically_associated_with — disease`  <br> - `drug — biolink:applied_to_treat — disease` | Curated variant–disease–therapy data; rich manual curation backbone |
+| **cBioPortal**   | Variants, Conditions                               | - `variant — biolink:genetically_associated_with — disease`                         | Adds additional variant–disease associations                        |
+| **1000 Genomes** | Variants (dbSNP), Genes, Populations               | - `variant — biolink:has_population_frequency — population`  <br> - `variant — biolink:located_in — gene` | Provides allele frequency and gene annotations for chromosome 6     |
+
+---
+
+## Node Categories  
+
+- **biolink:Variant** – allele registry IDs, dbSNP variants  
+- **biolink:Disease** – Disease Ontology / MONDO terms  
+- **biolink:Gene** – gene symbols and annotations  
+- **biolink:Drug / SmallMolecule** – therapy/drug entities  
+- **biolink:Population** – population-level frequency nodes  
+
+---
+
+## Example Edge Patterns  
+
+- `CAID:XXXX — biolink:genetically_associated_with — MONDO:YYYY`  
+- `Drug:DB00001 — biolink:applied_to_treat — DOID:ZZZZ`  
+- `dbSNP:rs12345 — biolink:has_population_frequency — 1000Genomes:EUR`  
 
 ---
 
