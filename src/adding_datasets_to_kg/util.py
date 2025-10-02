@@ -21,3 +21,11 @@ def get_kgx_output_file_writer(source_name: str) -> KGXFileWriter:
     kgx_file_writer = KGXFileWriter(nodes_output_file_path=str(output_nodes_path),
                                     edges_output_file_path=str(output_edges_path))
     return kgx_file_writer
+
+def format_hgvsg(hgvsg, spdi):
+    if hgvsg.startswith("NC_"):
+        return f"HGVS:{hgvsg}"
+    else:
+        spdi_contig = spdi.split(":")[0]
+        hgvsg_contig = hgvsg.split(":")[1:]
+        return f"HGVS:{spdi_contig}:{':'.join(hgvsg_contig)}"

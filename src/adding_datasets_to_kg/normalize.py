@@ -2,7 +2,7 @@ from adding_datasets_to_kg.util import get_data_output_directory_path
 
 from orion.kgx_file_normalizer import KGXFileNormalizer
 
-sources = ["civic", "cbioportal"]
+sources = ["civic", "cbioportal", "1kg"]
 
 def normalize_all():
     for source in sources:
