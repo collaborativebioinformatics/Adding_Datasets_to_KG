@@ -29,7 +29,7 @@ Example `config.json`:
 
 All downloaded data goes to the symbolic link named `current` pointing to the date-stamped download directory (`YYYY_MM_DD` format).
 
-This script fetches and saves all available studies from cBioPortal API to `all_studies.json` and extracts study IDs to `study_ids.txt` for processing. For each study ID, the script downloads molecular profile and sample list metadata; then downloads mutation data for each combination of molecular profile and sample list. Lastly, it performs a cleanup: removes JSON files containing "not found" responses, keeping only successfully downloaded mutation data.
+This script fetches and saves all available studies from cBioPortal API to `all_studies.json` and extracts study IDs to `study_ids.txt` for processing. For each study ID, the script downloads molecular profile and sample list metadata; then downloads mutation data for each combination of molecular profile and sample list. Lastly, it performs a cleanup: removes JSON files containing "not found" responses and moves JSON files that are potentially truncated to the `truncated` subdirectory, keeping only successfully downloaded mutation data. The user can then review the potentially truncated files and redownload them.
 
 #### API Endpoints Used
 
@@ -46,3 +46,4 @@ This script fetches and saves all available studies from cBioPortal API to `all_
 
 ##### Mutation Data
 - `{molecular_profile_id}_{sample_list_id}.json`: Mutation data files in the mutations subdirectory
+- `truncated/{molecular_profile_id}_{sample_list_id}.json`: Mutation data files that are potentially truncated and need manual review

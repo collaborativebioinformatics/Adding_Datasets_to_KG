@@ -89,3 +89,14 @@ grep -l "not found" *.json 2>/dev/null | xargs -r rm
 # Remove molecular profile and sample list files
 rm *_molecular_profiles.json
 rm *_sample_lists.json
+
+# Check whether there are truncated files
+## Create the truncated directory if it doesn't exist
+truncated_dir="${DOWNLOAD_DIR}/truncated/"
+mkdir -p "$truncated_dir"
+for file in "${MUTATIONS_DIR}/*.json"; do
+    if ! tail -c 10 "$file" | grep -q '}'; then
+        echo "Potentially truncated: $file"
+        mv "$file" "$truncated_dir"
+    fi
+done
