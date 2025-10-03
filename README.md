@@ -211,6 +211,12 @@ Now that our modular knowledge graphs have been standardized into the same Bioli
 
 We also developed a pipeline to convert the KG into **Amazon Neptune–ready files**. Hosting in Neptune provides a scalable, high-performance environment for querying nodes, edges, and metadata. Using **openCypher** or **Gremlin**, researchers can efficiently explore biological relationships. By connecting Neptune to a **Model Context Protocol (MCP) agent**, the KG becomes directly usable within AI workflows, enabling schema inspection, query execution, and integration of structured biomedical evidence into reasoning pipelines.  
 
+<p align="center">
+  <img width="746" height="1186" alt="Untitled-2025-10-03-1035" src="https://github.com/user-attachments/assets/ad748a3b-3023-4517-94cf-20dfe59c0b79" />
+</p>
+
+<p align="center">
+   
 ---
 
 ## Features (Planned / In Progress)  
@@ -227,11 +233,23 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 ## Data Sources and Graph Structure  
 
 | Data Source      | Node Types Introduced                              | Edge Types Produced                                                                 | Notes                                                                 |
-|------------------|----------------------------------------------------|-------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+|------------------|----------------------------------------------------|----------------------------------------------------------------------------------------------------|------------------------------------------------------------|
 | **CIViC**        | Variants (CAID), Diseases (DOID/MONDO), Genes (NCBIGene), Therapies (NCIT) | - `variant — biolink:genetically_associated_with — disease`  <br> - `variant — biolink:is_sequence_variant_of — gene` <br> - `therapy — biolink:applied_to_treat — disease` | Curated variant–disease–therapy data; rich manual curation backbone |
 | **cBioPortal**   | Genes (NCBIGene), Diseases (DOID)                               | - `gene — biolink:gene_associated_with_condition — disease`                         | Adds gene–disease associations from cancer studies                        |
 | **1000 Genomes** | Variants (HGVS), Genes (NCBIGene)               | - `variant — biolink:is_missense_variant_of — gene`  <br> - `variant — biolink:is_frameshift_variant_of — gene` <br> - `variant — biolink:is_synonymous_variant_of — gene` <br> - `variant — biolink:is_non_coding_variant_of — gene` <br> - Plus other consequence types | Provides variant functional consequences and population frequency data (stored as node properties) for chromosome 6     |
 | **TCGA** | Variants, Genes, Diseases               | TBD! | In development     |
+
+
+## Node Types from Sources
+</p>
+
+<p align="center">
+  <img width="746" height="366" alt="Untitled-2025-10-03-1042" src="https://github.com/user-attachments/assets/bce4332e-3e18-405e-be88-5d46b3915ee3" />
+</p>
+
+<img width="3200" height="1600" alt="image" src="https://github.com/user-attachments/assets/4e92a2b3-ae5b-4083-8ddf-999457552fbe" />
+
+**[View interactive data flow Sankey diagram](docs/sankey_diagram_sources-goldenKG.html)**
 
 ---
 
@@ -259,25 +277,5 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 <img width="1308" height="848" alt="newplot" src="https://github.com/user-attachments/assets/935d2213-58ca-4164-bf45-3f95578f7168" />
 
  **[View interactive data flow Sankey diagram](docs/sankey_diagram_sources-goldenKG.html)**
-
-<img width="3200" height="1600" alt="image" src="https://github.com/user-attachments/assets/4e92a2b3-ae5b-4083-8ddf-999457552fbe" />
-
-**[View interactive data flow Sankey diagram](docs/sankey_diagram_sources-goldenKG.html)**
  
-
- 
-
 ---
-
-<p align="center">
-  <img width="746" height="1186" alt="Untitled-2025-10-03-1035" src="https://github.com/user-attachments/assets/ad748a3b-3023-4517-94cf-20dfe59c0b79" />
-</p>
-
-<p align="center">
-  Our Nodes and Edges
-</p>
-
-<p align="center">
-  <img width="746" height="366" alt="Untitled-2025-10-03-1042" src="https://github.com/user-attachments/assets/bce4332e-3e18-405e-be88-5d46b3915ee3" />
-</p>
-
