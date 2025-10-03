@@ -20,3 +20,6 @@ def merge(graph_id: str, sources:list, output_dir:Path):
                     nodes_files=node_file_paths,
                     edges_files=edge_file_paths,
                     graph_id=graph_id)
+    merge_metadata = Path(output_dir) / f"{graph_id}_metadata.json"
+    merge_new_name = Path(output_dir) / f"{graph_id}_merge_metadata.json"
+    merge_metadata.rename(merge_new_name)
