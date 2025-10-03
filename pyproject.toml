@@ -14,7 +14,8 @@ dependencies = [
     "jupyter",
     "jupyterlab",
     "ipykernel",
-    "awscurl"
+    "awscurl",
+    "streamlit>=1.28.0"
 ]
 
 [build-system]

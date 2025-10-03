@@ -87,7 +87,8 @@ Resources:
   NeptuneS3Role:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub 'NeptuneS3LoadRole-${ClusterName}'
+      # Removed RoleName to let CloudFormation auto-generate unique names
+      # This prevents conflicts when creating multiple stacks
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
