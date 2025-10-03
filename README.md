@@ -77,6 +77,7 @@ For each data source (e.g., `civic/`, `cbioportal/`, `1kg/`):
 
 **CSV Format**: Tab-delimited files with typed columns ready for graph database import or analysis tools.
 
+
 ### Deploying to Amazon Neptune
 
 After generating the knowledge graph, you can deploy it to Amazon Neptune for scalable graph querying and AI integration.
@@ -227,28 +228,36 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 
 | Data Source      | Node Types Introduced                              | Edge Types Produced                                                                 | Notes                                                                 |
 |------------------|----------------------------------------------------|-------------------------------------------------------------------------------------|----------------------------------------------------------------------|
-| **CIViC**        | Variants (CAID), Diseases (DOID/MONDO), Genes, Drugs/Therapies | - `variant — biolink:genetically_associated_with — disease`  <br> - `drug — biolink:applied_to_treat — disease` | Curated variant–disease–therapy data; rich manual curation backbone |
-| **cBioPortal**   | Variants, Conditions                               | - `variant — biolink:genetically_associated_with — disease`                         | Adds additional variant–disease associations                        |
-| **1000 Genomes** | Variants (dbSNP), Genes, Populations               | - `variant — biolink:is_non_coding_variant_of — gene`  <br> - `variant — biolink:is_missense_variant_of — gene` | Provides allele frequency and gene annotations for chromosome 6     |
+| **CIViC**        | Variants (CAID), Diseases (DOID/MONDO), Genes (NCBIGene), Therapies (NCIT) | - `variant — biolink:genetically_associated_with — disease`  <br> - `variant — biolink:is_sequence_variant_of — gene` <br> - `therapy — biolink:applied_to_treat — disease` | Curated variant–disease–therapy data; rich manual curation backbone |
+| **cBioPortal**   | Genes (NCBIGene), Diseases (DOID)                               | - `gene — biolink:gene_associated_with_condition — disease`                         | Adds gene–disease associations from cancer studies                        |
+| **1000 Genomes** | Variants (HGVS), Genes (NCBIGene)               | - `variant — biolink:is_missense_variant_of — gene`  <br> - `variant — biolink:is_frameshift_variant_of — gene` <br> - `variant — biolink:is_synonymous_variant_of — gene` <br> - `variant — biolink:is_non_coding_variant_of — gene` <br> - Plus other consequence types | Provides variant functional consequences and population frequency data (stored as node properties) for chromosome 6     |
 | **TCGA** | Variants, Genes, Diseases               | TBD! | In development     |
 
 ---
 
-## Node Categories  
+## Node Categories
 
-- **biolink:Variant** – allele registry IDs, dbSNP variants  
-- **biolink:Disease** – Disease Ontology / MONDO terms  
-- **biolink:Gene** – gene symbols and annotations  
-- **biolink:Drug / SmallMolecule** – therapy/drug entities  
-- **biolink:Population** – population-level frequency nodes  
+- **biolink:SequenceVariant** – Allele registry IDs (CAID), HGVS notation variants
+- **biolink:Disease** – Disease Ontology (DOID) and MONDO terms
+- **biolink:Gene** – NCBIGene identifiers with gene symbols
+- **biolink:ChemicalEntity** – NCIT therapy identifiers (from CIViC)  
 
 ---
 
-## Example Edge Patterns  
+## Example Edge Patterns
 
-- `CAID:XXXX — biolink:genetically_associated_with — MONDO:YYYY`  
-- `Drug:DB00001 — biolink:applied_to_treat — DOID:ZZZZ`  
-- `dbSNP:rs12345 — biolink:has_population_frequency — 1000Genomes:EUR`  
+- **CIViC**: `CAID:CA123456 — biolink:genetically_associated_with — DOID:1234`
+- **CIViC**: `CAID:CA123456 — biolink:is_sequence_variant_of — NCBIGene:673`
+- **CIViC**: `NCIT:C1647 — biolink:applied_to_treat — DOID:1234`
+- **cBioPortal**: `NCBIGene:673 — biolink:gene_associated_with_condition — DOID:1115`
+- **1000 Genomes**: `HGVS:NC_000006.12:g.32548722G>A — biolink:is_missense_variant_of — NCBIGene:3123`
+
+**Note**: Population frequency data from 1000 Genomes (AFR, AMR, EAS, EUR, SAS) is stored as node properties on variant nodes, not as edges.  
+
+---
+#### Data Flow Visualization
+
+ **[View interactive data flow Sankey diagram](docs/sankey_diagram_sources-goldenKG.html)**
 
 ---
 
