@@ -13,6 +13,10 @@ The long-term aim is to establish a well-defined semantic data model that ensure
 
 ---
 
+
+
+---
+
 ## Methods  
 
 We built our knowledge graph by leveraging existing open tools including **Node Normalizer** for identifier harmonization, the **Biolink Model** for semantic alignment, and **ORION** for graph construction. To demonstrate feasibility, we collected and integrated data from **CIViC, cBioPortal, and the 1000 Genomes Project**, focusing on chromosome 6.  
@@ -85,15 +89,15 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 
 ---
 
+<p align="center">
+  <img width="746" height="1186" alt="Untitled-2025-10-03-1035" src="https://github.com/user-attachments/assets/ad748a3b-3023-4517-94cf-20dfe59c0b79" />
+</p>
 
+<p align="center">
+  Our Nodes and Edges
+</p>
 
-<img width="3275" height="4606" alt="MIDAS" src="https://github.com/user-attachments/assets/6232ea6a-038a-45d3-ae5f-13d13fda3459" />
-
-
-
-
-Our Nodes and Edges 
-
-<img width="5195" height="2605" alt="midas_nodes" src="https://github.com/user-attachments/assets/48992c90-f019-4946-b719-ad5e40f1d27d" />
-
+<p align="center">
+  <img width="746" height="366" alt="Untitled-2025-10-03-1042" src="https://github.com/user-attachments/assets/bce4332e-3e18-405e-be88-5d46b3915ee3" />
+</p>
 
