@@ -1,7 +1,7 @@
 from orion.kgx_file_converter import convert_jsonl_to_neo4j_csv
 
 
-# this is used to convert the kgx jsonlines file to csv in the style for upload
+# this is used to convert the kgx jsonlines file to csv in the style for neo4j import
 def convert_kgx_to_csv(nodes_input_file: str,
                        edges_input_file: str,
                        nodes_output_file: str = None,

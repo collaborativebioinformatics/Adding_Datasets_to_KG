@@ -1,22 +1,50 @@
-from adding_datasets_to_kg.convert_data import convert_all
+import click
+
+from adding_datasets_to_kg.convert_data import convert_to_kgx
 from adding_datasets_to_kg.kgx_converter import convert_kgx_to_csv
-from adding_datasets_to_kg.normalize import normalize_all
-from adding_datasets_to_kg.merge import merge_all
+from adding_datasets_to_kg.normalize import normalize
+from adding_datasets_to_kg.merge import merge
+from adding_datasets_to_kg.metadata import generate_metadata
 
-from adding_datasets_to_kg.util import get_kg_output_directory_path, get_source_list
+from adding_datasets_to_kg.util import get_kg_output_directory_path
 
-def run_pipeline():
-    sources = get_source_list()
-    convert_all(sources)
-    normalize_all(sources)
-    merge_all(sources)
+all_sources = [
+        "civic",
+        "cbioportal",
+        "1kg"
+]
 
-    golden_kg_output_path = get_kg_output_directory_path() / "goldenKG"
-    convert_kgx_to_csv(nodes_input_file=golden_kg_output_path / "goldenKG_nodes.jsonl",
-                       edges_input_file=golden_kg_output_path / "goldenKG_edges.jsonl",
-                       nodes_output_file=golden_kg_output_path / "goldenKG_nodes.csv",
-                       edges_output_file=golden_kg_output_path / "goldenKG_edges.csv")
+@click.command()
+@click.option('--graph-id', '-g', default="goldenKG", help='Graph identifier for output files.')
+@click.option('--sources', '-s', 'sources', multiple=True, default=all_sources,
+              help='Sources to include in the graph. Omit for all available sources.')
+def run_pipeline(graph_id:str, sources:tuple=None):
+    if not sources:
+        click.echo("No sources provided. Exiting...")
+        return
+    sources = list(sources)
+    click.echo(f"Building graph {graph_id} with source(s): {sources}")
+
+    # process and normalize the sources
+    convert_to_kgx(sources)
+    normalize(sources)
+
+    # merge and build a graph
+    graph_output_dir = get_kg_output_directory_path() / graph_id
+    graph_output_dir.mkdir(exist_ok=True)
+    merge(graph_id, sources, output_dir=graph_output_dir)
+
+    # generate graph summary metadata
+    graph_nodes_file = graph_output_dir / f"{graph_id}_nodes.jsonl"
+    graph_edges_file = graph_output_dir / f"{graph_id}_edges.jsonl"
+    print(f"Generating metadata for {graph_id}")
+    generate_metadata(graph_id, graph_nodes_file, graph_edges_file)
+
+    # prepare a csv file for neo4j import
+    convert_kgx_to_csv(nodes_input_file=graph_output_dir / f"{graph_id}_nodes.jsonl",
+                       edges_input_file=graph_output_dir / f"{graph_id}_edges.jsonl",
+                       nodes_output_file=graph_output_dir / f"{graph_id}_nodes.csv",
+                       edges_output_file=graph_output_dir / f"{graph_id}_edges.csv")
 
 if __name__ == "__main__":
-    print("running pipeline")
     run_pipeline()
