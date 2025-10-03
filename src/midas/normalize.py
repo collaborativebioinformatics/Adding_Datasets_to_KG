@@ -1,4 +1,4 @@
-from adding_datasets_to_kg.util import get_data_output_directory_path
+from midas.util import get_data_output_directory_path
 
 from orion.kgx_file_normalizer import KGXFileNormalizer
 

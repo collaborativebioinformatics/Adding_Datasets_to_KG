@@ -5,7 +5,7 @@ from pathlib import Path
 
 from orion.biolink_constants import GENE, DISEASE, SEQUENCE_VARIANT
 
-from adding_datasets_to_kg.util import get_data_directory_path, get_kgx_output_file_writer, format_hgvsg, get_consequence_predicate
+from midas.util import get_data_directory_path, get_kgx_output_file_writer, format_hgvsg, get_consequence_predicate
 
 
 def convert_civic_data():

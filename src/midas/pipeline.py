@@ -1,12 +1,12 @@
 import click
 
-from adding_datasets_to_kg.convert_data import convert_to_kgx
-from adding_datasets_to_kg.kgx_converter import convert_kgx_to_csv
-from adding_datasets_to_kg.normalize import normalize
-from adding_datasets_to_kg.merge import merge
-from adding_datasets_to_kg.metadata import generate_metadata
+from midas.convert_data import convert_to_kgx
+from midas.kgx_converter import convert_kgx_to_csv
+from midas.normalize import normalize
+from midas.merge import merge
+from midas.metadata import generate_metadata
 
-from adding_datasets_to_kg.util import get_kg_output_directory_path
+from midas.util import get_kg_output_directory_path
 
 all_sources = [
         "civic",

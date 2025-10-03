@@ -1,5 +1,5 @@
 [project]
-name = "adding-datasets-to-kg"
+name = "midas"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"

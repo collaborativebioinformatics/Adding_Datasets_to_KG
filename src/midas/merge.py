@@ -1,5 +1,5 @@
 from pathlib import Path
-from adding_datasets_to_kg.util import get_kg_output_directory_path
+from midas.util import get_kg_output_directory_path
 
 from orion.kgx_file_merger import merge_kgx_files
 
