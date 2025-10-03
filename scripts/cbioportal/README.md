@@ -4,7 +4,7 @@ Before running the scripts, please modify the paths in the `config.json` file to
 2. Modify the following fields to point to the correct directories on your machine:
    - `"downloads"`: Path to the directory where raw data will be saved.
    - `"generated_datasets"`: Path to the directory where processed datasets will be stored.
-   - `"mapping"`: Path to the directory containing mapping files. You will only need to modify the path to the `root` directory since mapping files are already included in the repository.
+   - `"logs"`: Path to the directory containing logs.
 
 Example `config.json`:
 
@@ -12,7 +12,7 @@ Example `config.json`:
 {
   "downloads": "/path/to/downloads",
   "generated_datasets": "/path/to/generated_datasets",
-  "mapping": "/root/pipeline/convert_step2/mapping"
+  "logs": "/path/to/logs"
 }
 ```
 
