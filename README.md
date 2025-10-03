@@ -13,6 +13,17 @@ The long-term aim is to establish a well-defined semantic data model that ensure
 
 ---
 
+## Project Goals  
+
+- Build modular KGs from **CIViC**, **cBioPortal**, **TCGA**, and **1000 Genomes**   
+- Normalize identifiers with **TOGO ID** or **Babel Node Normalizer**  
+- Apply the **Biolink Model** to standardize predicates  
+- Develop a semantic model for consistent integration of **variant-level data**  
+- Provide scalable workflows for adding new biomedical datasets  
+- Demonstrate Neptune + MCP integration for **AI-driven KG exploration**  
+
+---
+
 ## Prerequisites
 
 - **Python 3.12 or higher**
@@ -199,17 +210,6 @@ All entities were standardized with **Node Normalizer**, ensuring resolution to 
 Now that our modular knowledge graphs have been standardized into the same Biolink-compliant model, we can integrate them seamlessly with existing knowledge graphs such as **[ROBOKOP](https://robokop.renci.org)**. Because they share the same schema, identifiers, and predicate structure, they can be merged with the  ~50 sources, ~10 million nodes, and ~200 million edges contained in ROBOKOP’s existing framework without the need for extensive re-mapping. In practice, this means that we have made new KGs that can be interoperable with a larger system, run more expansive queries across all sources at once, and more easily surface insights from the combined network.
 
 We also developed a pipeline to convert the KG into **Amazon Neptune–ready files**. Hosting in Neptune provides a scalable, high-performance environment for querying nodes, edges, and metadata. Using **openCypher** or **Gremlin**, researchers can efficiently explore biological relationships. By connecting Neptune to a **Model Context Protocol (MCP) agent**, the KG becomes directly usable within AI workflows, enabling schema inspection, query execution, and integration of structured biomedical evidence into reasoning pipelines.  
-
----
-
-## Project Goals  
-
-- Build modular KGs from **CIViC**, **cBioPortal**, **TCGA**, and **1000 Genomes**   
-- Normalize identifiers with **TOGO ID** or **Babel Node Normalizer**  
-- Apply the **Biolink Model** to standardize predicates  
-- Develop a semantic model for consistent integration of **variant-level data**  
-- Provide scalable workflows for adding new biomedical datasets  
-- Demonstrate Neptune + MCP integration for **AI-driven KG exploration**  
 
 ---
 
