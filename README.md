@@ -214,13 +214,12 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 
 ## Features (Planned / In Progress)  
 
-- ✅ Data ingestion pipelines for **CIViC** and **cBioPortal**
-- 🔄 Data ingestion pipelines for **TCGA** and **1000Genome**  
-- 🔄 Identifier normalization and mapping  
-- 🔄 Biolink Model alignment for entities and relationships
+- ✅ Data ingestion pipelines for **CIViC** **cBioPortal** and **1000Genome** 
+- ⏳ Data ingestion pipelines for **TCGA**   
+- ✅ Identifier normalization and mapping  
+- ✅ Biolink Model alignment for entities and relationships
 - ✅ Transformation pipeline for **Neptune upload**  
-- ⏳ Example **Cypher/Gremlin queries** and graph exploration tools  
-- ⏳ Documentation for extending to new data sources  
+- ⏳ Example **Cypher/Gremlin queries** and graph exploration tools   
 
 ---
 
