@@ -13,6 +13,17 @@ The long-term aim is to establish a well-defined semantic data model that ensure
 
 ---
 
+## Project Goals  
+
+- Build modular KGs from **CIViC**, **cBioPortal**, **TCGA**, and **1000 Genomes**   
+- Normalize identifiers with **TOGO ID** or **Babel Node Normalizer**  
+- Apply the **Biolink Model** to standardize predicates  
+- Develop a semantic model for consistent integration of **variant-level data**  
+- Provide scalable workflows for adding new biomedical datasets  
+- Demonstrate Neptune + MCP integration for **AI-driven KG exploration**  
+
+---
+
 ## Prerequisites
 
 - **Python 3.12 or higher**
@@ -202,17 +213,6 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 
 ---
 
-## Project Goals  
-
-- Build modular KGs from **CIViC**, **cBioPortal**, **TCGA**, and **1000 Genomes**   
-- Normalize identifiers with **TOGO ID** or **Babel Node Normalizer**  
-- Apply the **Biolink Model** to standardize predicates  
-- Develop a semantic model for consistent integration of **variant-level data**  
-- Provide scalable workflows for adding new biomedical datasets  
-- Demonstrate Neptune + MCP integration for **AI-driven KG exploration**  
-
----
-
 ## Features (Planned / In Progress)  
 
 - ✅ Data ingestion pipelines for **CIViC** **cBioPortal** and **1000Genome** 
@@ -256,6 +256,7 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 
 ---
 #### Data Flow Visualization
+<img width="1308" height="848" alt="newplot" src="https://github.com/user-attachments/assets/935d2213-58ca-4164-bf45-3f95578f7168" />
 
  **[View interactive data flow Sankey diagram](docs/sankey_diagram_sources-goldenKG.html)**
 
