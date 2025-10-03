@@ -11,6 +11,7 @@ def normalize(sources:list):
             nodes_file = get_data_output_directory_path() / "kgs" / source / f"nodes.jsonl"
             if not nodes_file.exists():
                 print(f'Nodes file for {source} could not be located for normalization..')
+                return
 
         norm_nodes_file = get_data_output_directory_path() / "kgs" / source / f"{source}_normalized_nodes.jsonl"
         node_norm_map_file = get_data_output_directory_path() / "kgs" / source / f"normalization_map.json"
@@ -21,6 +22,8 @@ def normalize(sources:list):
             edges_file = get_data_output_directory_path() / "kgs" / source / f"edges.jsonl"
             if not edges_file.exists():
                 print(f'Edges file for {source} could not be located for normalization..')
+                return
+
         norm_edges_file = get_data_output_directory_path() / "kgs" / source / f"{source}_normalized_edges.jsonl"
         predicate_map_file = get_data_output_directory_path() / "kgs" / source / f"predicate_map.jsonl"
         normalizer = KGXFileNormalizer(source_nodes_file_path=nodes_file,
