@@ -42,8 +42,8 @@ To build a knowledge graph from the included sources:
 
 2. **Clone the repository**:
    ```bash
-   git clone https://github.com/collaborativebioinformatics/Adding_Datasets_to_KG/
-   cd Adding_Datasets_to_KG
+   git clone https://github.com/collaborativebioinformatics/MIDAS/
+   cd MIDAS
    ```
 
 3. **Install dependencies**:
@@ -55,7 +55,7 @@ To build a knowledge graph from the included sources:
 
 4. **Run the pipeline**:
    ```bash
-   uv run python src/adding_datasets_to_kg/pipeline.py
+   uv run python src/midas/pipeline.py
    ```
 
 This will process the included data sources (CIViC, cBioPortal, 1000 Genomes), normalize identifiers, merge the graphs, and output a unified knowledge graph in the `data_output/kgs/goldenKG/` directory.

@@ -24,7 +24,7 @@ The Neptune graph contains:
 
 1. Install dependencies (from project root):
 ```bash
-cd /home/ubuntu/Adding_Datasets_to_KG
+cd /home/ubuntu/MIDAS
 uv sync
 ```
 

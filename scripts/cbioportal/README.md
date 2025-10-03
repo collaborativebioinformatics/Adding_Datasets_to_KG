@@ -90,7 +90,7 @@ python extract_gene_info.py
 
 ### Study ID-to-DOID map
 ```bash
-adding_datasets_to_kg/scripts/cbioportal/mapping/study_id_to_doid_map.json
+midas/scripts/cbioportal/mapping/study_id_to_doid_map.json
 ```
 
 This is the mapping file used by the gene extraction script. It is a dictionary `study_id` → `DOID`. Some study IDs on cBioPortal correspond to mixed cancer studies, pancancer atlases, multiple cancer types - those study IDs are not mapped to any DOID and get an `NA` value instead.
