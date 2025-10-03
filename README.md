@@ -87,9 +87,13 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 
 
 
-<img width="3925" height="4575" alt="Untitled-2025-09-04-0748-5" src="https://github.com/user-attachments/assets/3bbbf431-dae4-4aeb-82f8-2fb727df86f8" />
+<img width="3275" height="4606" alt="MIDAS" src="https://github.com/user-attachments/assets/6232ea6a-038a-45d3-ae5f-13d13fda3459" />
 
 
-Our Nodes and Edges (Draft) 
 
-<img width="7971" height="2605" alt="Untitled-2025-09-04-0748-6" src="https://github.com/user-attachments/assets/f97cd85a-4bbc-47c4-81f2-59592919443b" />
+
+Our Nodes and Edges 
+
+<img width="5195" height="2605" alt="midas_nodes" src="https://github.com/user-attachments/assets/48992c90-f019-4946-b719-ad5e40f1d27d" />
+
+

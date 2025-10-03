@@ -1,0 +1,10 @@
+{
+    "relevant_paths": {
+        "downloads": "/path/to/downloads",
+        "generated_datasets": "/path/to/generated/datasets",
+        "logs": "/path/to/logs"
+    },
+    "resource_init": {
+        "cbioportal": ["subfolder1", "subfolder2"]
+    }
+}
