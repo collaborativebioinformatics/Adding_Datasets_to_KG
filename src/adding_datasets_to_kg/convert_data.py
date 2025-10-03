@@ -83,12 +83,12 @@ def convert_cbioportal_data():
             
 def convert_1kg_data() -> None: 
     print("Converting 1kg data to KGX files...")
-    onekg_data_path = get_data_directory_path() / "1kg" / "1kg_test2.json"
+    onekg_data_path = get_data_directory_path() / "1kg" / "1kg_test.json"
     with (open(onekg_data_path, "r") as onekg_data_file,
           get_kgx_output_file_writer("1kg") as kgx_file_writer):
         for line in onekg_data_file:
             variant_obj = json.loads(line)
-            variant_id = next((format_hgvsg(tc["hgvsg"], tc["spdi"]) for tc in variant_obj['transcript_consequences'] if "hgvsg" in tc), None)
+            variant_id = next((format_hgvsg(tc["hgvsg"], tc["spdi"]) for tc in variant_obj['transcript_consequences'] if "hgvsg" in tc and 'spdi' in tc), None)
             gene_id = next((f"NCBIGene:{tc["gene_id"]}" for tc in variant_obj['transcript_consequences']), None)
 
             if variant_id:
