@@ -314,3 +314,76 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
  **[View interactive data flow Sankey diagram](docs/sankey_diagram_sources-goldenKG.html)**
  
 ---
+### Sample Query
+'''
+What are the genes associated colorectal cancer and what are the treatments for them? Show top 10 variants associated with them
+'''
+
+### Result
+'''
+## Genes Associated with Colorectal Cancer
+
+From the database, I found over 19,000 genes associated with colorectal cancer. Here are some key genes identified:
+
+### Top Genes from the Database:
+1. **FHL1** - Four and a half LIM domains 1
+2. **KIFC1** - Kinesin family member C1
+3. **TIMM17A** - Translocase of inner mitochondrial membrane 17A
+4. **APOO** - Apolipoprotein O
+5. **CHCHD10** - Coiled-coil-helix-coiled-coil-helix domain containing 10
+6. **LTC4S** - Leukotriene C4 synthase
+7. **RPL38** - Ribosomal protein L38
+8. **RPLP2** - Ribosomal protein lateral stalk subunit P2
+9. **S100A3** - S100 calcium binding protein A3
+10. **SUMO2** - Small ubiquitin like modifier 2
+
+### Key Well-Known Colorectal Cancer Genes:
+The database also contains important colorectal cancer genes like **APC** (APC regulator of Wnt signaling pathway), which is one of the most critical genes in colorectal cancer development.
+
+## Treatments for Colorectal Cancer
+
+From the database, I identified one specific treatment:
+- **Therapeutic Tumor Infiltrating Lymphocytes** - A cell-based immunotherapy approach for treating colorectal cancer
+
+## Top 10 Variants Associated with Colorectal Cancer Genes
+
+Here are variants I found associated with key colorectal cancer genes:
+
+### APC Gene Variants:
+1. **rs459552 (Variant 1)** - Missense variant with multiple genomic coordinates:
+   - HGVS: LRG_130:g.153539T>G
+   - Location: Chr5:112841059T>G
+   - ClinVar ID: 231079
+
+2. **rs459552 (Variant 2)** - Another allele of the same variant:
+   - HGVS: LRG_130:g.153539T>A
+   - Location: Chr5:112841059T>A
+   - ClinVar ID: 21030
+
+### KRAS Gene Variants:
+3. **rs61759623** - Missense variant:
+   - HGVS: NC_000012.11:g.25401876T>C
+   - Location: Chr12:25248942T>C
+
+### Additional Findings:
+The database shows various types of sequence variants including:
+- Missense variants (amino acid changes)
+- Non-coding variants
+- Nearby variants
+- Frameshift variants
+- Synonymous variants
+- Nonsense variants
+- Splice site variants
+
+## Clinical Significance
+
+The genes identified play crucial roles in:
+- **Cell cycle regulation** (TP53, APC)
+- **Wnt signaling pathway** (APC)
+- **RAS/MAPK pathway** (KRAS, BRAF)
+- **DNA mismatch repair** (MLH1, MSH2, MSH6, PMS2)
+- **PI3K/AKT pathway** (PIK3CA)
+- **Protein synthesis and cellular metabolism** (various ribosomal proteins)
+
+These genetic alterations contribute to colorectal cancer development through various mechanisms including tumor suppressor loss, oncogene activation, and DNA repair deficiencies. The variants identified can serve as biomarkers for diagnosis, prognosis, and treatment selection in colorectal cancer patients.
+'''
