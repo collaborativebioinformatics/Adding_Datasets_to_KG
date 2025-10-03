@@ -272,22 +272,36 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 - **CIViC**: `NCIT:C1647 — biolink:applied_to_treat — DOID:1234`
 - **cBioPortal**: `NCBIGene:673 — biolink:gene_associated_with_condition — DOID:1115`
 - **1000 Genomes**: `HGVS:NC_000006.12:g.32548722G>A — biolink:is_missense_variant_of — NCBIGene:3123`
-  
-- **biolink:is_nearby_variant_of**: 2453552
-- **biolink:is_non_coding_variant_of**: 2021277
-- **biolink:has_phenotype**: 614307
-- **biolink:gene_associated_with_condition**: 415271
-- **biolink:has_molecular_consequence**: 368310
-- **biolink:subclass_of**: 130128
-- **biolink:is_missense_variant_of**: 33675
-- **biolink:is_synonymous_variant_of**: 15737
-- **biolink:related_to**: 3309,
-- **biolink:is_splice_site_variant_of**: 1836
-- **biolink:genetically_associated_with**: 962
-- **biolink:is_sequence_variant_of**: 810
-- **biolink:is_nonsense_variant_of**: 336
-- **biolink:is_frameshift_variant_of**: 335
-- **biolink:applied_to_treat**: 2
+
+**biolink:is_nearby_variant_of**: 2453552
+
+**biolink:is_non_coding_variant_of**: 2021277
+
+**biolink:has_phenotype**: 614307
+
+**biolink:gene_associated_with_condition**: 415271
+
+**biolink:has_molecular_consequence**: 368310
+
+**biolink:subclass_of**: 130128
+
+**biolink:is_missense_variant_of**: 33675
+
+**biolink:is_synonymous_variant_of**: 15737
+
+**biolink:related_to**: 3309
+
+**biolink:is_splice_site_variant_of**: 1836
+
+**biolink:genetically_associated_with**: 962
+
+**biolink:is_sequence_variant_of**: 810
+
+**biolink:is_nonsense_variant_of**: 336
+
+**biolink:is_frameshift_variant_of**: 335
+
+**biolink:applied_to_treat**: 2
 
 **Note**: Population frequency data from 1000 Genomes (AFR, AMR, EAS, EUR, SAS) is stored as node properties on variant nodes, not as edges.  
 
