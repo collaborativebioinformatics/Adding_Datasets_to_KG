@@ -80,14 +80,16 @@ def convert_cbioportal_data():
                                        predicate="biolink:gene_associated_with_condition",
                                        object_id=disease_id,
                                        primary_knowledge_source="infores:cbioportal")
-            
-def convert_1kg_data() -> None: 
+
+def convert_1kg_data() -> None:
     print("Converting 1kg data to KGX files...")
     onekg_data_path = get_data_directory_path() / "1kg" / "1kg_test.json"
     with (open(onekg_data_path, "r") as onekg_data_file,
           get_kgx_output_file_writer("1kg") as kgx_file_writer):
         for line in onekg_data_file:
             variant_obj = json.loads(line)
+            if 'transcript_consequences' not in variant_obj:
+                continue
             variant_id = next((format_hgvsg(tc["hgvsg"], tc["spdi"]) for tc in variant_obj['transcript_consequences'] if "hgvsg" in tc and 'spdi' in tc), None)
             gene_id = next((f"NCBIGene:{tc["gene_id"]}" for tc in variant_obj['transcript_consequences']), None)
 
@@ -115,13 +117,16 @@ def convert_1kg_data() -> None:
                                            primary_knowledge_source="infores:1000genomes")
 
 
-def convert_all(sources:list=None):
+conversion_functions = {
+    "1kg": convert_1kg_data,
+    "civic": convert_civic_data,
+    "cbioportal": convert_cbioportal_data
+}
+
+def convert_to_kgx(sources:list):
     output_dir = Path(__file__).parent.parent.parent / "data_output" / "kgs"
     output_dir.mkdir(parents=True, exist_ok=True)
-    if sources:
-        if "1kg" in sources:
-            convert_1kg_data()
-        if "civic" in sources:
-            convert_civic_data()
-        if "cbioportal" in sources:
-            convert_cbioportal_data()
+    for source in sources:
+        convert_function = conversion_functions.get(source, None)
+        if convert_function:
+            convert_function()

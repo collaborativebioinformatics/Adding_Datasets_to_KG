@@ -2,13 +2,6 @@ from pathlib import Path
 
 from orion.kgx_file_writer import KGXFileWriter
 
-def get_source_list():
-    return [
-        "civic",
-        "cbioportal",
-        "1kg"
-        # "tcga"
-    ]
 
 def get_data_directory_path():
     output_dir = Path(__file__).parent.parent.parent / "data"

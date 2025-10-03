@@ -6,8 +6,9 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "robokop-orion>=0.1.4",
-    "pandas",
-    "numpy",
+    "click",
+    # "pandas",
+    # "numpy",
     "boto3",
     "mcp",
     "strands-agents",
