@@ -88,6 +88,8 @@ def convert_1kg_data() -> None:
           get_kgx_output_file_writer("1kg") as kgx_file_writer):
         for line in onekg_data_file:
             variant_obj = json.loads(line)
+            if 'transcript_consequences' not in variant_obj:
+                continue
             variant_id = next((format_hgvsg(tc["hgvsg"], tc["spdi"]) for tc in variant_obj['transcript_consequences'] if "hgvsg" in tc and 'spdi' in tc), None)
             gene_id = next((f"NCBIGene:{tc["gene_id"]}" for tc in variant_obj['transcript_consequences']), None)
 
