@@ -315,12 +315,12 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
  
 ---
 ### Sample Query
-'''
+```
 What are the genes associated colorectal cancer and what are the treatments for them? Show top 10 variants associated with them
-'''
+```
 
 ### Result
-'''
+```
 ## Genes Associated with Colorectal Cancer
 
 From the database, I found over 19,000 genes associated with colorectal cancer. Here are some key genes identified:
@@ -386,4 +386,4 @@ The genes identified play crucial roles in:
 - **Protein synthesis and cellular metabolism** (various ribosomal proteins)
 
 These genetic alterations contribute to colorectal cancer development through various mechanisms including tumor suppressor loss, oncogene activation, and DNA repair deficiencies. The variants identified can serve as biomarkers for diagnosis, prognosis, and treatment selection in colorectal cancer patients.
-'''
+```
