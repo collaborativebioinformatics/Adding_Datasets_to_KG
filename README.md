@@ -16,9 +16,7 @@ The long-term aim is to establish a well-defined semantic data model that ensure
 ## Prerequisites
 
 - **Python 3.12 or higher**
-- **[uv](https://docs.astral.sh/uv/)** - Fast Python package installer and resolver
-- **Internet connection** - Required for Node Normalizer API calls during identifier normalization
-- **Operating System** - macOS, Linux, or Windows with WSL
+- **[uv](https://docs.astral.sh/uv/)** 
 
 ---
 
@@ -149,8 +147,6 @@ The script will:
 3. Monitor progress and wait for completion
 4. Initiate bulk loading for edges
 5. Monitor until all data is loaded
-
-**Performance**: Typical load times are 15-30 minutes for hundreds of thousands of nodes and millions of edges.
 
 #### 4. Query the Knowledge Graph
 
