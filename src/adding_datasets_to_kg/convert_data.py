@@ -5,7 +5,7 @@ from pathlib import Path
 
 from orion.biolink_constants import GENE, DISEASE, SEQUENCE_VARIANT
 
-from adding_datasets_to_kg.util import get_data_directory_path, get_kgx_output_file_writer
+from adding_datasets_to_kg.util import get_data_directory_path, get_kgx_output_file_writer, format_hgvsg, get_consequence_predicate
 
 
 def convert_civic_data():
@@ -80,11 +80,48 @@ def convert_cbioportal_data():
                                        predicate="biolink:gene_associated_with_condition",
                                        object_id=disease_id,
                                        primary_knowledge_source="infores:cbioportal")
+            
+def convert_1kg_data() -> None: 
+    print("Converting 1kg data to KGX files...")
+    onekg_data_path = get_data_directory_path() / "1kg" / "1kg_test2.json"
+    with (open(onekg_data_path, "r") as onekg_data_file,
+          get_kgx_output_file_writer("1kg") as kgx_file_writer):
+        for line in onekg_data_file:
+            variant_obj = json.loads(line)
+            variant_id = next((format_hgvsg(tc["hgvsg"], tc["spdi"]) for tc in variant_obj['transcript_consequences'] if "hgvsg" in tc), None)
+            gene_id = next((f"NCBIGene:{tc["gene_id"]}" for tc in variant_obj['transcript_consequences']), None)
+
+            if variant_id:
+                frequency_list = variant_obj["input"].split()[-1].split(";")
+                most_severe_consequence = f"{variant_obj["most_severe_consequence"]}"
+                for frequency in frequency_list:
+                    if frequency.startswith("AFR="):
+                        AFR_frequency = {"AFR": frequency.split("=")[1]}
+                    elif frequency.startswith("AMR="):
+                        AMR_frequency = {"AMR": frequency.split("=")[1]}
+                    elif frequency.startswith("EAS="):
+                        EAS_frequency = {"EAS": frequency.split("=")[1]}
+                    elif frequency.startswith("EUR="):
+                        EUR_frequency = {"EUR": frequency.split("=")[1]}
+                    elif frequency.startswith("SAS="):
+                        SAS_frequency = {"SAS": frequency.split("=")[1]}
+                frequencies = [AFR_frequency, AMR_frequency, EAS_frequency, EUR_frequency, SAS_frequency]
+                kgx_file_writer.write_node(node_id=variant_id, node_types=[SEQUENCE_VARIANT], node_properties={"frequencies": frequencies})
+                kgx_file_writer.write_node(node_id=gene_id, node_types=[GENE])
+                kgx_file_writer.write_edge(subject_id=variant_id,
+                                           predicate=get_consequence_predicate(most_severe_consequence),
+                                           object_id=gene_id,
+                                           edge_properties={"most_severe_consequence": most_severe_consequence},
+                                           primary_knowledge_source="infores:1000genomes")
+
 
 def convert_all(sources:list=None):
     output_dir = Path(__file__).parent.parent.parent / "data_output" / "kgs"
     output_dir.mkdir(parents=True, exist_ok=True)
-    if sources and "civic" in sources:
-        convert_civic_data()
-    if sources and "cbioportal" in sources:
-        convert_cbioportal_data()
+    if sources:
+        if "1kg" in sources:
+            convert_1kg_data()
+        if "civic" in sources:
+            convert_civic_data()
+        if "cbioportal" in sources:
+            convert_cbioportal_data()

@@ -2,6 +2,7 @@ from adding_datasets_to_kg.util import get_data_output_directory_path
 
 from orion.kgx_file_normalizer import KGXFileNormalizer
 
+
 def normalize_all(sources:list):
     for source in sources:
         nodes_file = get_data_output_directory_path() / "kgs" / source / f"{source}_nodes.jsonl"
