@@ -260,6 +260,13 @@ We also developed a pipeline to convert the KG into **Amazon Neptune–ready fil
 
  **[View interactive data flow Sankey diagram](docs/sankey_diagram_sources-goldenKG.html)**
 
+<img width="3200" height="1600" alt="image" src="https://github.com/user-attachments/assets/4e92a2b3-ae5b-4083-8ddf-999457552fbe" />
+
+**[View interactive data flow Sankey diagram](docs/sankey_diagram_sources-goldenKG.html)**
+ 
+
+ 
+
 ---
 
 <p align="center">
