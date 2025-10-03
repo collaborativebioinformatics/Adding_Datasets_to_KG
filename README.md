@@ -48,6 +48,8 @@ To build a knowledge graph from the included sources:
 
 3. **Install dependencies**:
    ```bash
+   uv venv
+   source .venv/bin/activate
    uv sync
    ```
 
